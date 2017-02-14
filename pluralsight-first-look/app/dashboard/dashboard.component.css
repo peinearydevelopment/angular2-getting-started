@@ -1,0 +1,30 @@
+.mdl-cell--col-3 {
+  width: 25%;
+}
+
+@media (max-width: 839px) and (min-width: 480px){
+  .mdl-cell.mdl-cell--3-col {
+    width: 25%;
+  }
+}
+
+@media (max-width: 479px) and (min-width: 320px) {
+  .mdl-cell.mdl-cell--3-col {
+    width: 10em;
+    margin: 0.5em auto;
+  }
+}
+
+@media (max-width: 319px) {
+  .mdl-cell.mdl-cell--3-col {
+    width: 10em;
+    margin: 0.5em auto;
+  }
+}
+
+
+/*
+Copyright 2016 JohnPapa.net, LLC. All Rights Reserved.
+Use of this source code is governed by an MIT-style license that
+can be found in the LICENSE file at http://bit.ly/l1cense
+*/
