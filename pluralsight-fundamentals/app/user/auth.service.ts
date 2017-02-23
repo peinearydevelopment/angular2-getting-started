@@ -1,4 +1,7 @@
 import { Injectable } from '@angular/core';
+import { Headers, Http, RequestOptions, Response } from '@angular/http';
+
+import { Observable } from 'rxjs/Rx';
 
 import { IUser } from './user.model';
 
@@ -6,21 +9,65 @@ import { IUser } from './user.model';
 export class AuthService {
     currentUser: IUser;
 
+    constructor(private http: Http) {}
+
+    checkAuthenticationStatus() {
+        return this.http
+                   .get('/api/currentIdentity')
+                   .map((response: any) => {
+                       if (response._body) {
+                            return response.json();
+                       } else {
+                           return {};
+                       }
+                   })
+                   .do(currentUser => {
+                       if (!!currentUser.userName) {
+                           this.currentUser = currentUser;
+                       }
+                   })
+                   .subscribe();
+    }
+
+    isAuthenticated() {
+        return !!this.currentUser;
+    }
+
     loginUser(userName: string, password: string) {
-        this.currentUser = {
-            id: 1,
-            userName: userName,
-            firstName: 'John',
-            lastName: 'Papa'
-        };
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+        let loginInfo = { username: userName, password: password };
+
+        return this.http
+                   .post('/api/login', loginInfo, options)
+                   .do((response: Response) => {
+                       if (response) {
+                           this.currentUser = <IUser> response.json().user;
+                       }
+                   })
+                   .catch(error => {
+                       return Observable.of(false);
+                   });
+    }
+
+    logout() {
+        this.currentUser = undefined;
+
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+
+        return this.http
+                   .post('/api/logout', JSON.stringify({}), options);
     }
 
     updateCurrentUser(firstName: string, lastName: string) {
         this.currentUser.firstName = firstName;
         this.currentUser.lastName = lastName;
-    }
 
-    isAuthenticated() {
-        return !!this.currentUser;
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+
+        return this.http
+                   .put(`/api/users/${this.currentUser.id}`, this.currentUser, options);
     }
 }

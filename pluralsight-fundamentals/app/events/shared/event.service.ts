@@ -1,30 +1,51 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
+import { Headers, Http, RequestOptions, Response } from '@angular/http';
 
 import { Observable, Subject } from 'rxjs/RX';
 
 import { IEvent } from './event.model';
+import { ISession } from './session.model';
 
 @Injectable()
 export class EventService {
-    getEvent(id: number): IEvent {
-        return EVENTS.find(event => event.id === id);
+    constructor(private http: Http) {}
+
+    getEvent(id: number): Observable<IEvent> {
+        //return EVENTS.find(event => event.id === id);
+        return this.http
+                   .get(`/api/events/${id}`)
+                   .map((response: Response) => <IEvent> response.json())
+                   .catch(this.handleError);
     }
 
     getEvents(): Observable<IEvent[]> {
-        let subject = new Subject<IEvent[]>();
-
-        setTimeout(() => {
-            subject.next(EVENTS);
-            subject.complete();
-        }, 100);
-
-        return subject;
+        return this.http
+                   .get('/api/events')
+                   .map((response: Response) => <IEvent[]> response.json())
+                   .catch(this.handleError);
     }
 
-    saveEvent(event) {
-        event.id = 999;
-        event.session = [];
-        EVENTS.push(event);
+    private handleError(error: Response) {
+        return Observable.throw(error.statusText);
+    }
+
+    saveEvent(event): Observable<IEvent> {
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+
+        return this.http
+                   .post('/api/events', JSON.stringify(event), options) // in a more recent release of Angular, the JSON.stringify call is unneccessary, the object can be passed by itself
+                   .map((response: Response) => {
+                       return <IEvent> response.json()
+                   })
+                   .catch(this.handleError);
+    }
+
+    searchSessions(searchTerm: string)/*: Observable<ISession[]>*/ {
+        return this.http
+                   .get(`/api/sessions/search?search=${searchTerm}`)
+                   .map((response: Response) => /*<ISession[]>*/ response.json())
+                   .catch(this.handleError);
     }
 }
 

@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
-import { restrictedWords } from '../shared/index';
+import { restrictedWords, ISession } from '../shared/index';
 
 @Component({
+    selector: 'create-session',
     templateUrl: 'app/events/event-details/create-session.component.html',
     styles: [`
         em { float: right; color: #E05C65; padding-left: 10px; }
@@ -12,9 +13,13 @@ import { restrictedWords } from '../shared/index';
         .error ::-moz-placeholder { color: #999; }
         .error :-moz-placeholder { color: #999; }
         .error :ms-input-placeholder { color: #999; }
+        a { cursor: pointer; }
     `]
 })
 export class CreateSessionComponent implements OnInit {
+    @Output() saveNewSession = new EventEmitter();
+    @Output() cancelAddSession = new EventEmitter();
+
     newSessionForm: FormGroup;
 
     name: FormControl;
@@ -39,7 +44,21 @@ export class CreateSessionComponent implements OnInit {
         });
     }
 
+    cancel() {
+        this.cancelAddSession.emit();
+    }
+
     saveSession(formValues) {
-        console.log(formValues);
+        let session: ISession = {
+            abstract: formValues.abstract,
+            duration: +formValues.duration,
+            id: undefined,
+            level: formValues.level,
+            name: formValues.name,
+            presenter: formValues.presenter,
+            voters: []
+        }
+
+        this.saveNewSession.emit(session);
     }
 }
