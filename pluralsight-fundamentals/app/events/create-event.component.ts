@@ -4,7 +4,13 @@ import { Router } from '@angular/router';
 import { EventService } from './shared/index';
 
 @Component({
-    templateUrl: 'app/events/create-event.component.html',
+    /*
+        AOT CHANGE
+        For systemjs need to add moduleId and template url goes from 'app/events/create-event.component.html' to 'create-event.component.html'
+        If we were using webpack, then we wouldn't need to specify moduleId and the relative path for the templateUrl would start with './'
+    */
+    moduleId: module.id,
+    templateUrl: 'create-event.component.html',
     styles: [`
         em { float: right; color: #E05C65; padding-left: 10px; }
         .error input { background-color: #E3C3C5; }

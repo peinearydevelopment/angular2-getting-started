@@ -1,6 +1,7 @@
+import './rxjs-extensions';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { RouterModule } from '@angular/router';
+import { RouterModule, /*For eager loading of modules*/ PreloadAllModules } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
@@ -23,7 +24,7 @@ import {
 import { Error404Component } from './errors/404.component';
 import { EventsAppComponent } from './events-app.component';
 import { NavBarComponent } from './nav/navbar.component';
-import { 
+import {
     CollapsibleWellComponent,
     JQUERY_TOKEN,
     ModalTriggerDirective,
@@ -36,8 +37,17 @@ import { AuthService } from './user/auth.service';
 
 import { appRoutes } from './routes';
 
-declare let toastr: Toastr;
-declare let jQuery: Object;
+/*
+    AOT CHANGE
+    change from
+        declare let toastr: Toastr;
+        declare let jQuery: Object;
+    to
+        let toastr: Toastr = window['toastr'];
+        let jQuery: Object = window['$'];
+*/
+let toastr: Toastr = window['toastr'];
+let jQuery: Object = window['$'];
 
 @NgModule({
     bootstrap: [EventsAppComponent],
@@ -63,7 +73,7 @@ declare let jQuery: Object;
         FormsModule,
         HttpModule,
         ReactiveFormsModule,
-        RouterModule.forRoot(appRoutes)
+        RouterModule.forRoot(appRoutes, { preloadingStrategy: PreloadAllModules })
     ],
     providers: [
         AuthService,

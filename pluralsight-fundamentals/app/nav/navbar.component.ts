@@ -19,7 +19,13 @@ export class NavBarComponent {
     searchTerm: string = '';
     foundSessions: ISession[];
 
-    constructor(private authService: AuthService, private eventService: EventService) {}
+/*
+    AOT CHANGE
+    properties used in the templates must be public properties of the components
+    by default properties are public
+    needed to change the AuthService to be public(it was private before)
+ */
+    constructor(public authService: AuthService, private eventService: EventService) {}
 
     searchSessions(searchTerm) {
         this.eventService.searchSessions(searchTerm).subscribe(sessions => {

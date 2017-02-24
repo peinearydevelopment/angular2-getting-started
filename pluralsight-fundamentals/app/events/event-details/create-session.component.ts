@@ -57,7 +57,7 @@ export class CreateSessionComponent implements OnInit {
             name: formValues.name,
             presenter: formValues.presenter,
             voters: []
-        }
+        };
 
         this.saveNewSession.emit(session);
     }

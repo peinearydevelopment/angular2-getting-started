@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router'
+import { Routes } from '@angular/router';
 
 import {
     CreateEventComponent,
@@ -8,6 +8,8 @@ import {
     EventsListResolver,
     EventResolver
 } from './events/index';
+
+import { userRoutes } from './user/user.routes';
 
 import { Error404Component } from './errors/404.component';
 
@@ -23,5 +25,12 @@ export const appRoutes: Routes = [
         prefix: if url starts with
         full: if url fully matches
     */
-    { path: 'user', loadChildren: 'app/user/user.module#UserModule' }
+
+    /*
+        Since Rollup doesn't support code splitting, we can't lazy load modules
+        therefor, replace this
+        { path: 'user', loadChildren: 'app/user/user.module#UserModule' }
+        with below
+    */
+    { path: 'user', children: userRoutes }
 ];

@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 
 import { ISession } from '../shared/index';
 import { AuthService } from '../../user/auth.service';
@@ -17,7 +17,11 @@ export class SessionList implements OnChanges {
 
     constructor(private auth: AuthService, private voterService: VoterService) {}
 
-    ngOnChanges() {
+    /*
+        AOT CHANGE
+        function signatures need to match, before we didn't have the param changes on this method...needed to add it
+     */
+    ngOnChanges(changes: SimpleChanges) {
         if (this.sessions) {
             this.filterSessions(this.filterBy);
             this.sortBy === 'name' ? this.visibleSessions.sort(sortByNameAsc) : this.visibleSessions.sort(sortByVotesDesc);

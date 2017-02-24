@@ -1,0 +1,8 @@
+CAN'T DO THE FOLLOWING
+	templates
+		can't use form.controls.controlName
+		control.errors?.someError
+	default exports
+	function in providers, routes or declarations of a module
+	any field used in a template, including Inputs must be public
+	declare var for globals

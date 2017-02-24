@@ -1,6 +1,8 @@
 /**
  * System configuration for Angular samples
  * Adjust as necessary for your application needs.
+ * 
+ * Would need to use Rollup for bundling/minification types of tasks
  */
 (function (global) {
   System.config({

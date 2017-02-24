@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { AuthService } from './auth.service';
@@ -11,6 +11,13 @@ import { AuthService } from './auth.service';
 })
 export class LoginComponent {
     loginInvalid = false;
+    /*
+        AOT CHANGE
+        needed to add the below three properties. they are used in the template and for AOT to work, they need to be declared in the component as well.
+     */
+    public mouseoverLogin = false;
+    public userName: string;
+    public password: string;
 
     constructor(private authService: AuthService, private router: Router) {}
 
